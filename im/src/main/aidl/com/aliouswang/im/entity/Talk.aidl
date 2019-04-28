@@ -1,5 +1,5 @@
 // Talk.aidl
-package com.example.aliouswang.binderolympic.entity;
+package com.aliouswang.im.entity;
 
 // Declare any non-default types here with import statements
 

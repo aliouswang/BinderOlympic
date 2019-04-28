@@ -1,0 +1,13 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.aliouswang.im" >
+
+
+    <application>
+
+        <service android:name=".remote.IMRemoteService"
+            android:process=":remote_service"
+            />
+
+    </application>
+
+</manifest>
