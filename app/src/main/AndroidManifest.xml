@@ -23,6 +23,18 @@
 
         <activity android:name=".SessionDetailActivity"/>
 
+        <service android:name=".remote.IMRemoteService"
+            android:process=":remote_service"
+            >
+
+            <intent-filter>
+
+                <action android:name="com.aliouswang.im.msgservice"/>
+
+            </intent-filter>
+
+        </service>
+
     </application>
 
 </manifest>

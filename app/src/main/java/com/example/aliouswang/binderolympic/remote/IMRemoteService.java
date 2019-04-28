@@ -1,4 +1,4 @@
-package com.aliouswang.im.remote;
+package com.example.aliouswang.binderolympic.remote;
 
 import android.app.Service;
 import android.content.Intent;
@@ -37,7 +37,20 @@ public class IMRemoteService extends Service {
 
         @Override
         public void sendMessage(String pid, Talk talk) throws RemoteException {
-
+            List<User> allUser = getUserList();
+            User targetUser = null;
+            for (User user : allUser) {
+                if (pid.equals(user.id)) {
+                    targetUser = user;
+                    break;
+                }
+            }
+            if (targetUser != null) {
+                IUserProxy userProxy = mUserProxyHashMap.get(targetUser);
+                if (userProxy != null) {
+                    userProxy.pushMessage(talk);
+                }
+            }
         }
 
         @Override

@@ -22,7 +22,7 @@ public class SessionViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(Talk talk) {
         Picasso.get().load(talk.fromUserHead).into(img_user);
-        tv_user_name.setText(talk.fromName);
+        tv_user_name.setText(talk.content);
     }
 
 }

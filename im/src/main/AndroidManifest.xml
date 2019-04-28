@@ -4,9 +4,7 @@
 
     <application>
 
-        <service android:name=".remote.IMRemoteService"
-            android:process=":remote_service"
-            />
+
 
     </application>
 

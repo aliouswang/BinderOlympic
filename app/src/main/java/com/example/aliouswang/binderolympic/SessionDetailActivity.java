@@ -3,10 +3,15 @@ package com.example.aliouswang.binderolympic;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Process;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.aliouswang.im.entity.Talk;
 import com.aliouswang.im.entity.TalkMessage;
@@ -28,6 +33,8 @@ public class SessionDetailActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private SessionAdapter mSessionAdapter;
+    private Button btn_send;
+    private EditText et_input;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +49,28 @@ public class SessionDetailActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mSessionAdapter);
 
         EventBus.getDefault().register(this);
+
+        et_input = findViewById(R.id.et_input);
+
+        btn_send = findViewById(R.id.btn_send);
+        btn_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Talk talk = new Talk();
+                talk.fromId = Process.myPid() + "";
+                talk.toId = mUser.id;
+                talk.fromName = "Jake";
+                talk.fromUserHead = "http://img0.pconline.com.cn/pconline/1511/29/7257120_901_thumb.jpg";
+                talk.content = et_input.getText().toString();
+                try {
+                    IMManager.getInstance().getIMService().sendMessage(
+                            mUser.id,  talk
+                    );
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override

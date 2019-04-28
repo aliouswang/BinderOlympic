@@ -13,7 +13,7 @@ import com.aliouswang.im.IUserProxy;
 import com.aliouswang.im.entity.Talk;
 import com.aliouswang.im.entity.TalkMessage;
 import com.aliouswang.im.entity.User;
-import com.aliouswang.im.remote.IMRemoteService;
+import com.example.aliouswang.binderolympic.remote.IMRemoteService;
 import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
@@ -53,15 +53,10 @@ public class IMManager {
                 try {
                     String pid = Process.myPid() + "";
                     User user = new User(pid, "Jake", "http://img0.pconline.com.cn/pconline/1511/29/7257120_901_thumb.jpg");
-                    imService.register(user, new IUserProxy() {
+                    imService.register(user, new IUserProxy.Stub() {
                         @Override
                         public void pushMessage(Talk talk) throws RemoteException {
                             EventBus.getDefault().post(new TalkMessage(talk));
-                        }
-
-                        @Override
-                        public IBinder asBinder() {
-                            return null;
                         }
                     });
                     List<User> userList = imService.getUserList();
