@@ -53,4 +53,5 @@ public class Talk implements Parcelable {
         dest.writeInt(toId);
         dest.writeString(content);
     }
+
 }
