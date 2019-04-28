@@ -15,6 +15,6 @@ interface IMService {
 
     void sendMessage(String pid, in Talk talk);
 
-    List<String> getUserList();
+    List<User> getUserList();
 
 }

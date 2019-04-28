@@ -1,37 +1,42 @@
 package com.example.aliouswang.binderolympic;
 
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
+import android.os.Bundle;
 import android.os.Process;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 
-import com.aliouswang.im.IMService;
-import com.aliouswang.im.IUserProxy;
-import com.aliouswang.im.entity.Talk;
 import com.aliouswang.im.entity.User;
-import com.aliouswang.im.remote.IMRemoteService;
-import com.orhanobut.logger.Logger;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private Button btn_connect;
+    private RecyclerView mRecyclerView;
+    private Button btn_unconnect;
+    private Button btn_load_list;
+
+    private IMAdapter mIMAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mRecyclerView = findViewById(R.id.recyclerview);
+        mIMAdapter = new IMAdapter();
+        mRecyclerView.setAdapter(mIMAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        btn_unconnect = findViewById(R.id.btn_unconnect);
+        btn_load_list = findViewById(R.id.btn_load_list);
+
 
         btn_connect = findViewById(R.id.btn_connect);
         btn_connect.setOnClickListener(new View.OnClickListener() {
@@ -40,50 +45,45 @@ public class MainActivity extends AppCompatActivity {
                 connectIMService();
             }
         });
-    }
 
-    private void connectIMService() {
-        Intent intent = new Intent(this, IMRemoteService.class);
-        bindService(intent, new ServiceConnection() {
+        btn_unconnect = findViewById(R.id.btn_unconnect);
+        btn_unconnect.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                IMService imService =  IMService.Stub.asInterface(service);
-
+            public void onClick(View v) {
                 try {
-//                    int pid = imService.init();
-//                    Logger.d("pid:" + pid);
-
                     String pid = Process.myPid() + "";
-                    User user = new User(pid, "Jake", "http://img0.pconline.com.cn/pconline/1511/29/7257120_901_thumb.jpg");
-                    imService.register(user, new IUserProxy() {
-                        @Override
-                        public void pushMessage(Talk talk) throws RemoteException {
-
-                        }
-
-                        @Override
-                        public IBinder asBinder() {
-                            return null;
-                        }
-                    });
-                    List<String> userList = imService.getUserList();
-                    Logger.w(userList.toString());
-                    imService.asBinder().linkToDeath(new IBinder.DeathRecipient() {
-                        @Override
-                        public void binderDied() {
-
-                        }
-                    }, 0);
-                } catch (RemoteException e) {
+                    IMManager.getInstance().getIMService().unregister(new User(pid, "Jake", "http://img0.pconline.com.cn/pconline/1511/29/7257120_901_thumb.jpg"));
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+        });
 
+
+        btn_load_list.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onServiceDisconnected(ComponentName name) {
+            public void onClick(View v) {
+                try {
+                    List<User> users = IMManager.getInstance().getIMService().getUserList();
+                    List<User> newUsers = new ArrayList<>();
+                    for (User user : users) {
+                        String pid = Process.myPid() + "";
+                        if (!pid.equals(user.id)) {
+                            newUsers.add(user);
+                        }
+                    }
+                    mIMAdapter.setUserList(newUsers);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
 
             }
-        }, BIND_AUTO_CREATE);
+        });
+
+    }
+
+    private void connectIMService() {
+        IMManager.getInstance().tryConnect(this);
     }
 
 }

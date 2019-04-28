@@ -7,10 +7,34 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btn_connect"
-        android:text="connect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="connect" />
+
+        <Button
+            android:id="@+id/btn_unconnect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="unconnect" />
+
+        <Button
+            android:id="@+id/btn_load_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="load list" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

@@ -41,12 +41,12 @@ public class IMRemoteService extends Service {
         }
 
         @Override
-        public List<String> getUserList() throws RemoteException {
-            List<String> userIdList = new ArrayList<>();
-            for (User user : mUserList) {
-                userIdList.add(user.id);
-            }
-            return userIdList;
+        public List<User> getUserList() throws RemoteException {
+//            List<String> userIdList = new ArrayList<>();
+//            for (User user : mUserList) {
+//                userIdList.add(user.id);
+//            }
+            return mUserList;
         }
 
         private boolean checkStatus(User newUser) {
